@@ -1,21 +1,22 @@
 <% layout("layouts/boilerplate") -%>
+    
 
-    <body>
+        <body>
 
-        <div class="main">
-            <% for(let user of AllListings){ %>
-                <div class="card">
-                    <a href="/listings/<%= user._id %>">
-                        <img src="<%= user.image %>" alt="Listing Image">
+            <div class="main">
+                <% for(let user of AllListings){ %>
+                    <div class="card">
+                        <a href="/listings/<%= user._id %>">
+                            <img src="<%= user.image %>" alt="Listing Image">
 
-                        <div class="content">
-                            <h1><a href="/listings/<%= user._id %>">
-                                    <%= user.tital %>
-                                </a></h1>
-                        </div>
-                    </a>
-                </div>
-                <% } %> 
-        </div>
+                            <div class="content">
+                                <h1><a href="/listings/<%= user._id %>">
+                                        <%= user.tital %>
+                                    </a></h1>
+                            </div>
+                        </a>
+                    </div>
+                    <% } %>
+            </div>
 
-    </body>
+        </body>

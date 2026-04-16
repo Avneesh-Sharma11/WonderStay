@@ -28,11 +28,13 @@ router.post('/', validateListing, async (req, res) => {
     listing.reviews.push(newReview);
     await newReview.save()
     await listing.save()
+    req.flash("success", "New Review Successfully Added!")
     res.redirect(`/listings/${listing._id}`)
 })
 router.delete('/:id1/delete', asyncWrap(async (req, res) => {
     let { id, id1 } = req.params;
     let del = await Review.findByIdAndDelete(id1);
+    req.flash("success", "Successfully Deleted!")
     res.redirect(`/listings/${id}`)
 }))
 
