@@ -5,9 +5,9 @@
 
             <div class="main">
                 <% for(let user of AllListings){ %>
-                    <div class="card">
+                    <div class="">
                         <a href="/listings/<%= user._id %>">
-                            <img src="<%= user.image %>" alt="Listing Image">
+                            <img src="<%= user.image.url %>" alt="Listing Image">
 
                             <div class="content">
                                 <h1><a href="/listings/<%= user._id %>">

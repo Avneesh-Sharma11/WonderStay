@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Review = require('./review');
-const { ref } = require('joi');
+const { ref, string } = require('joi');
 const Schema = mongoose.Schema;
 
 const listingSchema = new Schema({
@@ -10,8 +10,8 @@ const listingSchema = new Schema({
     },
     description: String,
     image: {
-        type: String,
-        set: (v) => v === "" ? v = "https://i.pinimg.com/736x/37/a1/c7/37a1c752b36fe1bb122a3e555595ec30.jpg" : v
+        url: String,
+        filename: String
     },
     price: Number,
     location: String,
@@ -20,6 +20,10 @@ const listingSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Review'
     }],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 listingSchema.post("findOneAndDelete", async (listing) => {

@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 const express = require('express')
 const mongoose = require('mongoose')
 const Listing = require('./models/listing.js')
@@ -9,10 +12,15 @@ const asyncWrap = require('./utils/asyncWrap.js')
 const MyError = require('./utils/ExpressErr.js')
 const { listingSchema } = require('./schema.js')
 const Review = require('./models/review.js')
-const listings = require('./routes/listings.js')
-const reviews = require('./routes/reviews.js')
+const listingsRouter = require('./routes/listings.js')
+const reviewsRouter = require('./routes/reviews.js')
+const userRouter = require('./routes/user.js')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const User = require('./models/user.js')
+
 app.use(methodOverride('_method'))
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"))
@@ -24,7 +32,7 @@ app.use(express.static(path.join(__dirname, "/public")))
 main()
     .then(res => console.log('Connection Successfull...')).catch(err => console.log(err))
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust')
+    await mongoose.connect(process.env.MONGO_URL)
 }
 
 const sessionOptions = {
@@ -39,18 +47,31 @@ const sessionOptions = {
 }
 app.use(session(sessionOptions))
 app.use(flash())
+
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
+    res.locals.currentUser = req.user;
     next();
 })
+
+
 
 app.get('/', (req, res) => {
     res.render('listings/home.ejs')
 })
-app.use('/listings', listings)
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
-app.use('/listings/:id/reviews', reviews)
+app.use('/', userRouter)
+app.use('/listings', listingsRouter)
+
+app.use('/listings/:id/reviews', reviewsRouter)
 
 
 app.use((req, res, next) => {
@@ -58,7 +79,7 @@ app.use((req, res, next) => {
 });
 app.use((err, req, res, next) => {
     let { statusCode = 500, message = "Some error Occured" } = err
-    // console.log(err);
+    console.log(err);
     res.status(statusCode).send(message);
 });
 app.listen(8080, () => {

@@ -5,7 +5,7 @@
         <div class="form-container">
             <h2>Create Listing</h2>
 
-            <form action="/listings" method="post" class="needs-validation" novalidate>
+            <form action="/listings" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
 
                 <label for="title">Title</label>
                 <input id="title" name="list[tital]" class="form-control" type="text" required>
@@ -15,8 +15,9 @@
                 <input id="description" name="list[description]" class="form-control" type="text" required>
                 <div class="invalid-feedback">Please enter description</div>
 
-                <label for="image">Image URL</label>
-                <input id="image" name="list[image]" class="form-control" type="url">
+                <label for="image">Upload Image</label>
+                <input id="image" name="list[image]" class="form-control" type="file" required>
+                <!-- <div class="invalid-feedback">Please upload image> -->
 
                 <label for="price">Price</label>
                 <input id="price" name="list[price]" class="form-control" type="number" required>

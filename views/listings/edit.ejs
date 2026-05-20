@@ -9,7 +9,7 @@
                 <h2 class="text-center mb-4"><%= user.tital %></h2>
                 <p class="text-center text-muted">Profile ID: <%= user._id %></p>
 
-                <form method="post" action="/listings/<%= user._id %>?_method=PUT">
+                <form method="post" action="/listings/<%= user._id %>?_method=PUT" enctype="multipart/form-data">
 
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
@@ -21,15 +21,17 @@
                             value="<%= user.tital %>"
                         >
                     </div>
-
+                    <div class="mb3">
+                        <label for="">Orignal Image</label>
+                        <img src=<%= newUrl %> alt="" width = 150 >
+                    </div>
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image URL</label>
+                        <label for="image" class="form-label">Upload new Image</label>
                         <input 
-                            type="text" 
+                            type="file" 
                             id="image" 
                             name="image" 
                             class="form-control"
-                            value="<%= user.image %>"
                         >
                     </div>
 
