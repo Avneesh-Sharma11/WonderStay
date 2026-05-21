@@ -31,15 +31,16 @@ app.use(express.static(path.join(__dirname, "/public")))
 
 async function startServer() {
     try {
+        console.log("Connecting to DB...");
         await mongoose.connect(process.env.MONGO_URL);
         console.log("DB Connected");
         const port = process.env.PORT || 8080;
         app.listen(port, () => {
-            console.log('Server is running at port 8080...');
+            console.log(`Server is running at port ${port}...`);
         });
-
     } catch (err) {
-        console.log("DB connection failed:", err);
+        console.error("DB connection failed:", err);
+        process.exit(1);
     }
 }
 startServer();
