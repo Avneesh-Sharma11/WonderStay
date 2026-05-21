@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV !== 'production'){
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 const express = require('express')
@@ -29,11 +29,19 @@ app.use(express.json());
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")))
 
-main()
-    .then(res => console.log('Connection Successfull...')).catch(err => console.log(err))
-async function main() {
-    await mongoose.connect(process.env.MONGO_URL)
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        console.log("DB Connected");
+        app.listen(8080, () => {
+            console.log('Server is running at port 8080...');
+        });
+
+    } catch (err) {
+        console.log("DB connection failed:", err);
+    }
 }
+startServer();
 
 const sessionOptions = {
     secret: "thisshouldbeabettersecret",
@@ -66,7 +74,6 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.render('listings/home.ejs')
 })
-app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
 app.use('/', userRouter)
 app.use('/listings', listingsRouter)
@@ -82,6 +89,6 @@ app.use((err, req, res, next) => {
     console.log(err);
     res.status(statusCode).send(message);
 });
-app.listen(8080, () => {
-    console.log('Server is running at port 8080...')
-})
+// app.listen(8080, () => {
+//     console.log('Server is running at port 8080...')
+// })
